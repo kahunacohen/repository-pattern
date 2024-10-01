@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/kahunacohen/repo-pattern/controllers"
+	"github.com/kahunacohen/repo-pattern/internal/controllers"
 )
 
 func main() {
-
 	http.HandleFunc("/bl/emergency/import", controllers.ImportEmergencyDetails)
 
 	// Start the server on port 8080
