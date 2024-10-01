@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-func ExportUsers(w http.ResponseWriter, r *http.Request) {
+func ImportEmergencyDetails(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusAccepted)
 	response := map[string]string{
-		"message": "Export process has been initiated.",
+		"message": "Emergency import process has been initiated.",
 		"jobId":   "12345",
 	}
 	w.Header().Set("Content-Type", "application/json")

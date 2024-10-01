@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	http.HandleFunc("/users/export", controllers.ExportUsers)
+	http.HandleFunc("/bl/emergency/import", controllers.ImportEmergencyDetails)
 
 	// Start the server on port 8080
 	fmt.Println("Server is listening on port 8080...")
