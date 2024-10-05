@@ -2,7 +2,7 @@ version: "2"
 sql:
   - engine: "sqlite"
     queries:   
-      - "db/queries/user.sql"
+      - "db/queries/patients.sql"
     schema: "db/schema.sql"
     gen:
       go:
