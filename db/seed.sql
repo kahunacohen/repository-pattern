@@ -1,11 +1,11 @@
 -- Insert Users
-INSERT INTO users (email, created_at, updated_at) VALUES
-('alice@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('bob@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('charlie@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO patients (email, local_id, last_name, first_name, created_at, updated_at) VALUES
+('alice@example.com', '341077656', 'Rowan', 'Alice', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('bob@example.com', '741077656', 'Sitar', 'Bob', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('charlie@example.com', '875670987', 'Powel', 'Charlie', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert Emergency Details
-INSERT INTO emergency_details (user_id, created_at, updated_at, bound_to_bed, has_chair_wheel, last_updated_method) VALUES
+INSERT INTO emergency_details (patient_id, created_at, updated_at, bound_to_bed, has_chair_wheel, last_updated_method) VALUES
 (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, TRUE, 'manual'),
 (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE, FALSE, 'file'),
 (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, FALSE, 'manual');
