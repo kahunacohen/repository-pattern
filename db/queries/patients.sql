@@ -1,3 +1,6 @@
+-- name: GetPatient :one
+SELECT * from patients where id = ?;
+
 -- name: GetPatients :many
 SELECT * FROM patients;
 

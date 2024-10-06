@@ -1,7 +1,11 @@
 package repositories
 
-import "github.com/kahunacohen/repo-pattern/models"
+import (
+	"context"
 
-type UserRepository interface {
-	GetOne(id int) (models.User, error)
+	"github.com/kahunacohen/repo-pattern/db/generated"
+)
+
+type PatientRepository interface {
+	GetOne(ctx context.Context, id int64) (*generated.Patient, error)
 }

@@ -6,7 +6,7 @@ sql:
     schema: "db/schema.sql"
     gen:
       go:
-        package: "generated_models"
+        package: "generated"
         out: "db/generated"
         overrides:
           - db_type: pgtype.Int4
