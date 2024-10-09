@@ -1,3 +1,7 @@
+-- Insert companies
+INSERT INTO companies (employee_sync_ftp_address, employee_sync_ftp_input_dir, employee_sync_ftp_output_dir, employee_sync_ftp_password, employee_sync_ftp_user, name) VALUES
+('62.214.45.141', 'in-hilan-employees', 'out-hilan-employees', 'admin', 'user', 'matav');
+
 -- Insert Users
 INSERT INTO patients (email, local_id, last_name, first_name, created_at, updated_at) VALUES
 ('alice@example.com', '341077656', 'Rowan', 'Alice', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

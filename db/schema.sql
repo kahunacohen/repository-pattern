@@ -1,3 +1,14 @@
+CREATE TABLE companies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_sync_active BOOLEAN NOT NULL DEFAULT 0,
+    employee_sync_ftp_address TEXT,
+    employee_sync_ftp_input_dir TEXT,
+    employee_sync_ftp_output_dir TEXT,
+    employee_sync_ftp_password TEXT,
+    employee_sync_ftp_user TEXT,
+    name TEXT NOT NULL
+);
+
 CREATE TABLE patients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     local_id TEXT NOT NULL UNIQUE,
