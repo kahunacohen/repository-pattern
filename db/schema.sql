@@ -1,3 +1,5 @@
+-- Tables
+
 CREATE TABLE companies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     employee_sync_active BOOLEAN NOT NULL DEFAULT 0,
@@ -9,14 +11,15 @@ CREATE TABLE companies (
     name TEXT NOT NULL
 );
 
-CREATE TABLE patients (
+CREATE TABLE emergency_contacts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    local_id TEXT NOT NULL UNIQUE,
-    first_name TEXT NOT NULL,
+    emergency_details_id INTEGER NOT NULL,
     last_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    first_name TEXT NOT NULL,
+    relationship TEXT NOT NULL,
+    phone_number TEXT NOT NULL,
+    email TEXT,
+    FOREIGN KEY (emergency_details_id) REFERENCES emergency_details(id) ON DELETE CASCADE
 );
 
 CREATE TABLE emergency_details (
@@ -30,16 +33,38 @@ CREATE TABLE emergency_details (
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 );
 
-CREATE TABLE emergency_contacts (
+CREATE TABLE employees (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    emergency_details_id INTEGER NOT NULL,
-    last_name TEXT NOT NULL,
+    contact_info_phone_number TEXT,
+    contact_info_phone_number2 TEXT,
+    contact_info_mobile TEXT,
+    contact_info_fax TEXT,
+    contact_info_email TEXT,
+    contact_info_mailbox_number TEXT,
+    contact_info_agree_to_recieve_email BOOLEAN,
+    birthday  INTEGER,
+    surename TEXT NOT NULL,
     first_name TEXT NOT NULL,
-    relationship TEXT NOT NULL,
-    phone_number TEXT NOT NULL,
-    email TEXT,
-    FOREIGN KEY (emergency_details_id) REFERENCES emergency_details(id) ON DELETE CASCADE
+    family_status_id INTEGER NOT NULL,
+    FOREIGN KEY (family_status_id) REFERENCES family_statuses(id) ON DELETE CASCADE
 );
+
+CREATE table family_statuses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE patients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    local_id TEXT NOT NULL UNIQUE,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Views
 
 CREATE VIEW patients_with_emergency_details AS
 SELECT  p.id,
