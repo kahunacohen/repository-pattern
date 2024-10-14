@@ -11,6 +11,12 @@ CREATE TABLE companies (
     name TEXT NOT NULL
 );
 
+CREATE TABLE end_work_period_reasons (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT
+);
+
 CREATE TABLE emergency_contacts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     emergency_details_id INTEGER NOT NULL,
@@ -62,6 +68,16 @@ CREATE TABLE patients (
     email TEXT NOT NULL UNIQUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE work_periods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id INTEGER NOT NULL,
+    start DATETIME,
+    end DATETIME,
+    reason_id INTEGER,
+    FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+    FOREIGN KEY (reason_id) REFERENCES end_work_period_reasons(id) ON DELETE CASCADE
 );
 
 -- Views

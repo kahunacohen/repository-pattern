@@ -32,3 +32,14 @@ INSERT INTO patients (email, local_id, last_name, first_name, created_at, update
 ('alice@example.com', '341077656', 'Rowan', 'Alice', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('bob@example.com', '741077656', 'Sitar', 'Bob', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('charlie@example.com', '875670987', 'Powel', 'Charlie', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+-- Insert end_work_period_reasons
+INSERT INTO end_work_period_reasons (name, description) VALUES
+('resignation of employee', NULL),
+('dismissal', NULL);
+
+-- Insert work periods
+INSERT INTO work_periods (employee_id, start, end, reason_id) VALUES
+(1, '2022-09-14 00:00:00', '2024-10-14 00:00:00', 1),
+(2, '2023-07-13 00:00:00', NULL, 2);
