@@ -68,6 +68,8 @@ func parseLineToRecord(line []byte) (*hilanRecord, error) {
 
 	// Skip salary number
 	buf.Next(6)
+
+	// Read the next 9 to a string.
 	localID := *readString(buf.Next(8)) + *readString(buf.Next(1))
 	record.LocalID = localID
 	return &record, nil
