@@ -1,0 +1,80 @@
+package services
+
+import (
+	"bufio"
+	"bytes"
+	"fmt"
+	"io"
+	"strings"
+
+	"golang.org/x/text/encoding/charmap"
+)
+
+var (
+	// encoding = charmap.CodePage862.NewEncoder()
+	decoder = charmap.CodePage862.NewDecoder()
+)
+
+type hilanRecord struct {
+	// Birthday         *time.Time `json:"birthday"`
+	// City             *string    `json:"city"`
+	// Email            string     `json:"email"`
+	// EndDate          *time.Time `json:"endDate"`
+	// FamilyStatus     *int64     `json:"familyStatus"`
+	// FirstName        string     `json:"firstName"`
+	LocalID string `json:"localID"`
+	// Passport         string     `json:"password"`
+	// PhoneNumber      *string    `json:"phoneNumber"`
+	// PhoneNumber2     *string    `json:"phoneNumber2"`
+	// SpouceFirstName  *string    `json:"spouceFirstName"`
+	// StartWorkingDate *time.Time `json:"startWorkingDate"`
+	// Status           *string    `json:"status"`
+	// Street           *string    `json:"street"`
+	// Surname          string     `json:"surname"`
+	// Tarrif           string     `json:"tarrif"`
+}
+
+func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
+	var records []hilanRecord
+	bufReader := bufio.NewReader(r)
+	for {
+		line, err := bufReader.ReadBytes('\n')
+		if err != nil && err.Error() != "EOF" {
+			return nil, fmt.Errorf("error reading bytes: %w", err)
+		}
+		if err == io.EOF {
+			break
+		}
+
+		// Skip blank or empty lines
+		if strings.TrimSpace(string(line)) == "" {
+			continue
+		}
+
+		record, err := parseLineToRecord(line)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing line to record: %w", err)
+		}
+		records = append(records, *record)
+	}
+	return records, nil
+}
+
+func parseLineToRecord(line []byte) (*hilanRecord, error) {
+	var record hilanRecord
+	buf := bytes.NewBuffer(line)
+	// Skip first two 0s. "factory number"
+	buf.Next(2)
+
+	// Skip salary number
+	buf.Next(6)
+	localID := *readString(buf.Next(8)) + *readString(buf.Next(1))
+	record.LocalID = localID
+	return &record, nil
+}
+
+func readString(buffer []byte) *string {
+	conver, _ := decoder.String(string(buffer))
+	str := strings.Trim(conver, " ")
+	return &str
+}
