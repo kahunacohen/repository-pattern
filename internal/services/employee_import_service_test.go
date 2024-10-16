@@ -16,9 +16,7 @@ func TestParseInputStreamToRecords(t *testing.T) {
 		t.Fatalf("failed to parse file: %v", err)
 	}
 	lenRecords := len(records)
-	if err != nil {
-		t.Fatalf("error counting file lines: %v", err)
-	}
+
 	// The file has a few empty lines...so account for that.
 	const inputFileLineCount = 1741
 	if lenRecords != inputFileLineCount {
