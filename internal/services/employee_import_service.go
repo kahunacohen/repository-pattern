@@ -17,20 +17,20 @@ var (
 
 type hilanRecord struct {
 	// Birthday         *time.Time `json:"birthday"`
-	// City             *string    `json:"city"`
+	City *string `json:"city"`
 	// Email            string     `json:"email"`
 	// EndDate          *time.Time `json:"endDate"`
 	// FamilyStatus     *int64     `json:"familyStatus"`
-	// FirstName        string     `json:"firstName"`
-	LocalID string `json:"localID"`
+	FirstName string `json:"firstName"`
+	LocalID   string `json:"localID"`
 	// Passport         string     `json:"password"`
 	// PhoneNumber      *string    `json:"phoneNumber"`
 	// PhoneNumber2     *string    `json:"phoneNumber2"`
 	// SpouceFirstName  *string    `json:"spouceFirstName"`
 	// StartWorkingDate *time.Time `json:"startWorkingDate"`
 	// Status           *string    `json:"status"`
-	// Street           *string    `json:"street"`
-	// Surname          string     `json:"surname"`
+	Street  *string `json:"street"`
+	Surname string  `json:"surname"`
 	// Tarrif           string     `json:"tarrif"`
 }
 
@@ -72,6 +72,21 @@ func parseLineToRecord(line []byte) (*hilanRecord, error) {
 	// Read the next 9 to a string.
 	localID := *readString(buf.Next(8)) + *readString(buf.Next(1))
 	record.LocalID = localID
+
+	surname := *readReverseString(buf.Next(15))
+	firstName := *readReverseString(buf.Next(15))
+	record.Surname = surname
+	record.FirstName = firstName
+
+	// salary department
+	buf.Next(2)
+
+	// address
+	street := readReverseString(buf.Next(20))
+	city := readReverseString(buf.Next(15))
+	record.Street = street
+	record.City = city
+
 	return &record, nil
 }
 
@@ -79,4 +94,15 @@ func readString(buffer []byte) *string {
 	conver, _ := decoder.String(string(buffer))
 	str := strings.Trim(conver, " ")
 	return &str
+}
+
+func readReverseString(buffer []byte) *string {
+	str := readString(buffer)
+	r := []rune(*str)
+	var res []rune
+	for i := len(r) - 1; i >= 0; i-- {
+		res = append(res, r[i])
+	}
+	resStr := string(res)
+	return &resStr
 }
