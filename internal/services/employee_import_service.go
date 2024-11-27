@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
 )
 
 var (
@@ -91,8 +92,8 @@ func parseLineToRecord(line []byte) (*hilanRecord, error) {
 }
 
 func readString(buffer []byte) *string {
-	conver, _ := decoder.String(string(buffer))
-	str := strings.Trim(conver, " ")
+	decoded, _, _ := transform.Bytes(decoder, buffer)
+	str := strings.TrimSpace(string(decoded))
 	return &str
 }
 
