@@ -57,7 +57,8 @@ CREATE TABLE employees (
 
 CREATE table family_statuses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE
+    name TEXT NOT NULL UNIQUE,
+    accounting_id INTEGER NOT NULL
 );
 
 CREATE TABLE patients (

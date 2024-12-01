@@ -5,8 +5,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
+	"strconv"
 	"strings"
 
+	"github.com/kahunacohen/repo-pattern/db/generated"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
 )
@@ -16,18 +19,21 @@ const (
 )
 
 var (
-	// encoding = charmap.CodePage862.NewEncoder()
 	decoder = charmap.CodePage862.NewDecoder()
 )
+
+type HilanImportService struct {
+	familyStatuses map[int]*generated.FamilyStatus
+}
 
 type hilanRecord struct {
 	// Birthday         *time.Time `json:"birthday"`
 	City *string `json:"city"`
 	// Email            string     `json:"email"`
 	// EndDate          *time.Time `json:"endDate"`
-	// FamilyStatus     *int64     `json:"familyStatus"`
-	FirstName string `json:"firstName"`
-	LocalID   string `json:"localID"`
+	FamilyStatusId *int64 `json:"familyStatusId"`
+	FirstName      string `json:"firstName"`
+	LocalID        string `json:"localID"`
 	// Passport         string     `json:"password"`
 	// PhoneNumber      *string    `json:"phoneNumber"`
 	// PhoneNumber2     *string    `json:"phoneNumber2"`
@@ -39,7 +45,7 @@ type hilanRecord struct {
 	// Tarrif           string     `json:"tarrif"`
 }
 
-func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
+func (h *HilanImportService) ParseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
 	var records []hilanRecord
 	bufReader := bufio.NewReader(r)
 	i := 0
@@ -56,7 +62,7 @@ func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
 		if strings.TrimSpace(string(line)) == "" {
 			continue
 		}
-		record, err := parseLineToRecord(i, line)
+		record, err := h.parseLineToRecord(i, line)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing line to record: %w", err)
 		}
@@ -66,7 +72,36 @@ func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
 	return records, nil
 }
 
-func parseLineToRecord(lineNum int, line []byte) (*hilanRecord, error) {
+// This function takes a family status number from the hilan file, converts it to
+// Matav's family status db and sets the record with that ID.
+func (h *HilanImportService) setFamilyStatusID(record *hilanRecord, familyStatusFromFile *int64) {
+	if familyStatusFromFile != nil {
+		familyStatusValueFromFile := *familyStatusFromFile
+		if familyStatusValueFromFile > 5 {
+			// @TODO why minus 5 from values over 5?
+			familyStatusValueFromFile = familyStatusValueFromFile - 5
+		}
+		// the family statuses map is a map of accounting IDs to FamilyStatus structs, each
+		// with the Database ID and the name (e.g. single, married etc). I assume the status in the file
+		// is the accounting ID?
+		// DB looks like this:
+		// id |  name   | accounting_id
+		// ----+---------+---------------
+		//   1 | single  |             0
+		//   2 | married |             0
+		//   3 | devorce |             0
+		//   4 | widow   |             0
+		// @TODO the odd thing is that in our real db, every family status has an accounting_id of 0.
+		// For our test we inject a map, but we can't statically assign a map with identical keys of 0.
+		// This means that in the real job, it will always be single...?!!
+		familyStatus, ok := h.familyStatuses[int(familyStatusValueFromFile)]
+		if ok {
+			record.FamilyStatusId = &familyStatus.ID
+		}
+	}
+}
+
+func (h *HilanImportService) parseLineToRecord(lineNum int, line []byte) (*hilanRecord, error) {
 	if len(line) < MIN_HILAN_LINE_LENGTH {
 		return nil, fmt.Errorf("error parsing line from hilan import file. length of line %d is less than min length of %d", lineNum+1, MIN_HILAN_LINE_LENGTH)
 	}
@@ -96,7 +131,19 @@ func parseLineToRecord(lineNum int, line []byte) (*hilanRecord, error) {
 	record.Street = street
 	record.City = city
 
+	// family status
+	familyBuf := buf.Next(1)
+	familyStatusFromFile, err := readInt64(familyBuf)
+	if err != nil {
+		// @TODO what about this error?
+		log.Printf("error parsing line %d. Cannot read family status \"%v\" from file\n", lineNum, string(familyBuf))
+	}
+	h.setFamilyStatusID(&record, familyStatusFromFile)
 	return &record, nil
+}
+func readInt64(buffer []byte) (*int64, error) {
+	num, err := strconv.ParseInt(*readString(buffer), 10, 64)
+	return &num, err
 }
 
 func readString(buffer []byte) *string {

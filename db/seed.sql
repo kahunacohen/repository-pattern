@@ -21,11 +21,11 @@ INSERT INTO emergency_details (patient_id, created_at, updated_at, bound_to_bed,
 (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, FALSE, 'manual');
 
 -- Insert family statues
-INSERT INTO family_statuses (name) VALUES
-('single'),
-('married'),
-('divorced'),
-('widdow');
+INSERT INTO family_statuses (name, accounting_id) VALUES
+('single', 0),
+('married', 0),
+('divorced', 0),
+('widdow', 0);
 
 -- Insert patients
 INSERT INTO patients (email, local_id, last_name, first_name, created_at, updated_at) VALUES
