@@ -2,9 +2,17 @@ package services
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
+func TestParseInputStreamToRecordsLineTooShort(t *testing.T) {
+	reader := strings.NewReader("too\nshort line")
+	_, err := parseInputStreamToRecords(reader)
+	if err.Error() != "error parsing line to record: error parsing line from hilan import file. length of line 1 is less than min length of 410" {
+		t.Fatalf("did not get line too short error")
+	}
+}
 func TestParseInputStreamToRecords(t *testing.T) {
 	fh, err := os.Open("./MBTD594.PCF")
 	if err != nil {
@@ -36,11 +44,9 @@ func TestParseInputStreamToRecords(t *testing.T) {
 	if *records[0].City != "ניר עקיבא" {
 		t.Fatalf("wanted 'ניר עקיבא', got %s", *records[0].City)
 	}
-
-	// Convert JSON byte slice to string
-	// jsonString := string(jsonData)
-
-	// Print the JSON string
-	// fmt.Println(jsonString)
-
+	// jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
+	// if err != nil {
+	// 	t.Fatalf("failed to marshal records to JSON: %v", err)
+	// }
+	// fmt.Println(string(jsonData)) // Print to standard output
 }

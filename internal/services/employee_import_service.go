@@ -11,6 +11,10 @@ import (
 	"golang.org/x/text/transform"
 )
 
+const (
+	MIN_HILAN_LINE_LENGTH = 410
+)
+
 var (
 	// encoding = charmap.CodePage862.NewEncoder()
 	decoder = charmap.CodePage862.NewDecoder()
@@ -38,6 +42,7 @@ type hilanRecord struct {
 func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
 	var records []hilanRecord
 	bufReader := bufio.NewReader(r)
+	i := 0
 	for {
 		line, err := bufReader.ReadBytes('\n')
 		if err != nil && err.Error() != "EOF" {
@@ -51,17 +56,20 @@ func parseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
 		if strings.TrimSpace(string(line)) == "" {
 			continue
 		}
-
-		record, err := parseLineToRecord(line)
+		record, err := parseLineToRecord(i, line)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing line to record: %w", err)
 		}
 		records = append(records, *record)
+		i += 1
 	}
 	return records, nil
 }
 
-func parseLineToRecord(line []byte) (*hilanRecord, error) {
+func parseLineToRecord(lineNum int, line []byte) (*hilanRecord, error) {
+	if len(line) < MIN_HILAN_LINE_LENGTH {
+		return nil, fmt.Errorf("error parsing line from hilan import file. length of line %d is less than min length of %d", lineNum+1, MIN_HILAN_LINE_LENGTH)
+	}
 	var record hilanRecord
 	buf := bytes.NewBuffer(line)
 	// Skip first two 0s. "factory number"
