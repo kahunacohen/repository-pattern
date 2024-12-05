@@ -23,8 +23,7 @@ const (
 )
 
 var (
-	timezone *time.Location
-	decoder  = charmap.CodePage862.NewDecoder()
+	decoder = charmap.CodePage862.NewDecoder()
 )
 
 type HilanImportService struct {
