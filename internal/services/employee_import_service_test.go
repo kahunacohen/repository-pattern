@@ -1,6 +1,8 @@
 package services
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -35,9 +37,12 @@ func TestParseInputStreamToRecords(t *testing.T) {
 	}
 	lenRecords := len(records)
 
-	const inputFileLineCount = 2166
+	// The test file has some lines with no working period, these return nil
+	// records (3).
+	const numNilRecords = 3
+	const inputFileLineCount = 2166 - numNilRecords
 	if lenRecords != inputFileLineCount {
-		t.Fatalf("wanted 1742, got: %d", lenRecords)
+		t.Fatalf("wanted %d, got: %d", inputFileLineCount, lenRecords)
 	}
 
 	firstRecord := records[0]
@@ -52,13 +57,45 @@ func TestParseInputStreamToRecords(t *testing.T) {
 			t.Fatalf("wanted length of 9 for localID '%s' at line %d, got: %d", r.LocalID, i+1, lenLocalID)
 		}
 	}
+
 	if *firstRecord.City != "ניר עקיבא" {
 		t.Fatalf("wanted 'ניר עקיבא', got %s", *firstRecord.City)
 	}
+	if *firstRecord.FamilyStatusId != 2 {
+		t.Fatalf("wanted 2 for family status ID, got %d", *firstRecord.FamilyStatusId)
+	}
+	formattedBirthday := firstRecord.Birthday.Format("2006-01-02 15:04:05 +200 IST")
 
-	// jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
-	// if err != nil {
-	// 	t.Fatalf("failed to marshal records to JSON: %v", err)
-	// }
-	// fmt.Println(string(jsonData)) // Print to standard output
+	if formattedBirthday != "1980-01-04 00:00:00 +400 IST" {
+		t.Fatalf("wanted 1980-01-04 00:00:00 +0200 IST, got %s", formattedBirthday)
+
+	}
+	if *firstRecord.Mobile != "+972523438921" {
+		t.Fatalf("wanted +972523438921, got %s", *firstRecord.Mobile)
+	}
+	if firstRecord.PhoneNumber2 != nil {
+		t.Fatal("phone number 2 should be nil")
+	}
+
+	if firstRecord.Tarrif != "4261" {
+		t.Fatalf("wanted 4261, got %s", firstRecord.Tarrif)
+	}
+	if *firstRecord.Status != "45" {
+		t.Fatalf("wanted 45, got %s", *firstRecord.Status)
+	}
+
+	// The tenth record has a spouce first name
+	if *records[10].SpouceFirstName != "רן" {
+		t.Fatalf("wanted got '%s'", *records[10].SpouceFirstName)
+	}
+
+	if *firstRecord.Email != "1maayanf@matav.org.il" {
+		t.Fatalf("wanted 1maayanf@matav.org.il, got %s", *firstRecord.Email)
+	}
+
+	jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
+	if err != nil {
+		t.Fatalf("failed to marshal records to JSON: %v", err)
+	}
+	fmt.Println(string(jsonData)) // Print to standard output
 }
