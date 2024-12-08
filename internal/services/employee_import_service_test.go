@@ -1,8 +1,6 @@
 package services
 
 import (
-	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -25,13 +23,13 @@ func TestParseInputStreamToRecords(t *testing.T) {
 	}
 	defer fh.Close()
 
-	hilanImporterService := HilanImportService{familyStatuses: map[int]*generated.FamilyStatus{
+	hilanImportService := HilanImportService{familyStatuses: map[int]*generated.FamilyStatus{
 		0: {ID: 1, Name: "single"},
 		1: {ID: 2, Name: "married"},
 		2: {ID: 3, Name: "devorce"},
 		3: {ID: 4, Name: "widow"},
 	}}
-	records, err := hilanImporterService.ParseInputStreamToRecords(fh)
+	records, err := hilanImportService.ParseInputStreamToRecords(fh)
 	if err != nil {
 		t.Fatalf("failed to parse file: %v", err)
 	}
@@ -93,9 +91,9 @@ func TestParseInputStreamToRecords(t *testing.T) {
 		t.Fatalf("wanted 1maayanf@matav.org.il, got %s", *firstRecord.Email)
 	}
 
-	jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
-	if err != nil {
-		t.Fatalf("failed to marshal records to JSON: %v", err)
-	}
-	fmt.Println(string(jsonData)) // Print to standard output
+	// jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
+	// if err != nil {
+	// 	t.Fatalf("failed to marshal records to JSON: %v", err)
+	// }
+	// fmt.Println(string(jsonData)) // Print to standard output
 }
