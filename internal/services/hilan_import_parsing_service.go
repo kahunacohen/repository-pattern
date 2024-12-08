@@ -1,3 +1,5 @@
+// A service to handle importing Hilan export files to the matav database.
+
 package services
 
 import (
@@ -42,11 +44,11 @@ type hilanRecord struct {
 	Tarrif          string     `json:"tarrif"`
 }
 
-type HilanImportService struct {
+type HilanImportParsingService struct {
 	familyStatuses map[int]*generated.FamilyStatus
 }
 
-func (h *HilanImportService) ParseInputStreamToRecords(r io.Reader) ([]hilanRecord, error) {
+func (h *HilanImportParsingService) ParseStream(r io.Reader) ([]hilanRecord, error) {
 	var records []hilanRecord
 	bufReader := bufio.NewReader(r)
 	i := 0
@@ -63,7 +65,7 @@ func (h *HilanImportService) ParseInputStreamToRecords(r io.Reader) ([]hilanReco
 		if strings.TrimSpace(string(line)) == "" {
 			continue
 		}
-		record, err := h.parseLineToRecord(i, line)
+		record, err := h.parseLine(i, line)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing line to record: %w", err)
 		}
@@ -77,7 +79,7 @@ func (h *HilanImportService) ParseInputStreamToRecords(r io.Reader) ([]hilanReco
 	return records, nil
 }
 
-func (h *HilanImportService) parseLineToRecord(lineNum int, line []byte) (*hilanRecord, error) {
+func (h *HilanImportParsingService) parseLine(lineNum int, line []byte) (*hilanRecord, error) {
 	if len(line) < MIN_HILAN_LINE_LENGTH {
 		return nil, fmt.Errorf("error parsing line from hilan import file. length of line %d is less than min length of %d", lineNum+1, MIN_HILAN_LINE_LENGTH)
 	}
@@ -215,7 +217,7 @@ func (h *HilanImportService) parseLineToRecord(lineNum int, line []byte) (*hilan
 
 // This function takes a family status number from the hilan file, converts it to
 // Matav's family status db and sets the record with that ID.
-func (h *HilanImportService) setFamilyStatusID(record *hilanRecord, familyStatusFromFile *int64) {
+func (h *HilanImportParsingService) setFamilyStatusID(record *hilanRecord, familyStatusFromFile *int64) {
 	if familyStatusFromFile != nil {
 		familyStatusValueFromFile := *familyStatusFromFile
 		if familyStatusValueFromFile > 5 {

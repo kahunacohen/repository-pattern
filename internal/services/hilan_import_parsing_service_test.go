@@ -8,28 +8,28 @@ import (
 	"github.com/kahunacohen/repo-pattern/db/generated"
 )
 
-func TestParseInputStreamToRecordsLineTooShort(t *testing.T) {
+func TestHilanParsingServiceLineTooShort(t *testing.T) {
 	reader := strings.NewReader("too\nshort line")
-	hilanImporterService := HilanImportService{}
-	_, err := hilanImporterService.ParseInputStreamToRecords(reader)
+	hilanImporterService := HilanImportParsingService{}
+	_, err := hilanImporterService.ParseStream(reader)
 	if err.Error() != "error parsing line to record: error parsing line from hilan import file. length of line 1 is less than min length of 410" {
 		t.Fatalf("did not get line too short error")
 	}
 }
-func TestParseInputStreamToRecords(t *testing.T) {
+func TestHilanParsingService(t *testing.T) {
 	fh, err := os.Open("./MBTD594.PCF")
 	if err != nil {
 		t.Fatalf("faled to open test file: %v", err)
 	}
 	defer fh.Close()
 
-	hilanImportService := HilanImportService{familyStatuses: map[int]*generated.FamilyStatus{
+	hilanImportService := HilanImportParsingService{familyStatuses: map[int]*generated.FamilyStatus{
 		0: {ID: 1, Name: "single"},
 		1: {ID: 2, Name: "married"},
 		2: {ID: 3, Name: "devorce"},
 		3: {ID: 4, Name: "widow"},
 	}}
-	records, err := hilanImportService.ParseInputStreamToRecords(fh)
+	records, err := hilanImportService.ParseStream(fh)
 	if err != nil {
 		t.Fatalf("failed to parse file: %v", err)
 	}
