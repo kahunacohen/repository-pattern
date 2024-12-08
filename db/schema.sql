@@ -41,17 +41,19 @@ CREATE TABLE emergency_details (
 
 CREATE TABLE employees (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    birthday  INTEGER,
+    contact_info_agree_to_recieve_email BOOLEAN,
+    contact_info_email TEXT,
+    contact_info_fax TEXT,
+    contact_info_mailbox_number TEXT,
+    contact_info_mobile TEXT,
     contact_info_phone_number TEXT,
     contact_info_phone_number2 TEXT,
-    contact_info_mobile TEXT,
-    contact_info_fax TEXT,
-    contact_info_email TEXT,
-    contact_info_mailbox_number TEXT,
-    contact_info_agree_to_recieve_email BOOLEAN,
-    birthday  INTEGER,
-    surename TEXT NOT NULL,
-    first_name TEXT NOT NULL,
     family_status_id INTEGER NOT NULL,
+    first_name TEXT NOT NULL,
+    foreign_passport_number TEXT,
+    local_id_number TEXT,
+    surename TEXT NOT NULL,
     FOREIGN KEY (family_status_id) REFERENCES family_statuses(id) ON DELETE CASCADE
 );
 
