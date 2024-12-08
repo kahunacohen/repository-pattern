@@ -10,11 +10,11 @@ import (
 )
 
 type EmployeeRepositoryImpl struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func (e *EmployeeRepositoryImpl) GetEmployeeByLocalIdOrPassport(ctx context.Context, localId, passportNumber *string) (*generated.Employee, error) {
-	queries := generated.New(e.db)
+	queries := generated.New(e.DB)
 	localIdNullStr := ToSqlNullStr(localId)
 	if localIdNullStr.Valid {
 		localIdNullStr.String = strings.TrimLeft(localIdNullStr.String, "0")

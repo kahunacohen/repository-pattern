@@ -1,6 +1,10 @@
 package services
 
-import "github.com/kahunacohen/repo-pattern/internal/repositories"
+import (
+	"fmt"
+
+	"github.com/kahunacohen/repo-pattern/internal/repositories"
+)
 
 type HilanDataSyncService struct {
 	employeeRepo repositories.EmployeeRepository
@@ -12,5 +16,6 @@ func NewHilanDataSyncService(employeeRepository repositories.EmployeeRepository)
 	}
 }
 func (ds *HilanDataSyncService) SyncRecords(records []hilanRecord) error {
+	fmt.Println(len(records))
 	return nil
 }

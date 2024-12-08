@@ -91,9 +91,9 @@ func TestHilanParsingService(t *testing.T) {
 		t.Fatalf("wanted 1maayanf@matav.org.il, got %s", *firstRecord.Email)
 	}
 
-	// jsonData, err := json.MarshalIndent(records, "", "  ") // Pretty print
-	// if err != nil {
-	// 	t.Fatalf("failed to marshal records to JSON: %v", err)
-	// }
-	// fmt.Println(string(jsonData)) // Print to standard output
+	writer := JSONFileWriter{}
+	if err := writer.WriteToFile("MBTD594.json", records); err != nil {
+		t.Fatalf("failed writing output: %v", err)
+	}
+
 }
