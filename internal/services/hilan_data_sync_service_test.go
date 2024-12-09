@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"log"
@@ -28,9 +29,15 @@ func TestHilanDataSyncService(t *testing.T) {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 	defer db.Close()
-	employeeRepo := &repositories.EmployeeRepositoryImpl{DB: db}
-	familyStatusRepo := &repositories.FamilyStatusImpl{DB: db}
 
-	hilanDataSyncService := NewHilanDataSyncService(employeeRepo, familyStatusRepo)
+	hilanDataSyncService, err := NewHilanDataSyncService(
+		context.Background(),
+		&repositories.CompanyImpl{DB: db},
+		&repositories.EmployeeRepositoryImpl{DB: db},
+		&repositories.FamilyStatusImpl{DB: db})
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	hilanDataSyncService.SyncRecords(records)
 }
