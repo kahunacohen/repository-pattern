@@ -29,7 +29,8 @@ func TestHilanDataSyncService(t *testing.T) {
 	}
 	defer db.Close()
 	employeeRepo := &repositories.EmployeeRepositoryImpl{DB: db}
+	familyStatusRepo := &repositories.FamilyStatusImpl{DB: db}
 
-	hilanDataSyncService := NewHilanDataSyncService(employeeRepo)
+	hilanDataSyncService := NewHilanDataSyncService(employeeRepo, familyStatusRepo)
 	hilanDataSyncService.SyncRecords(records)
 }

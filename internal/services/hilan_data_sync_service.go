@@ -7,12 +7,14 @@ import (
 )
 
 type HilanDataSyncService struct {
-	employeeRepo repositories.EmployeeRepository
+	employeeRepo     repositories.EmployeeRepository
+	familyStatusRepo repositories.FamilyStatusRepository
 }
 
-func NewHilanDataSyncService(employeeRepository repositories.EmployeeRepository) *HilanDataSyncService {
+func NewHilanDataSyncService(employeeRepository repositories.EmployeeRepository, familyStatusRepository repositories.FamilyStatusRepository) *HilanDataSyncService {
 	return &HilanDataSyncService{
-		employeeRepo: employeeRepository,
+		employeeRepo:     employeeRepository,
+		familyStatusRepo: familyStatusRepository,
 	}
 }
 func (ds *HilanDataSyncService) SyncRecords(records []hilanRecord) error {
