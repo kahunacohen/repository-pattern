@@ -19,7 +19,7 @@ func (e *EmployeeRepositoryImpl) GetEmployeeByLocalIdOrPassport(ctx context.Cont
 	if localIdNullStr.Valid {
 		localIdNullStr.String = strings.TrimLeft(localIdNullStr.String, "0")
 	}
-	empl, err := queries.GetByLocalIdOrPassport(ctx, generated.GetByLocalIdOrPassportParams{
+	empl, err := queries.GetEmployeeByLocalIdOrPassport(ctx, generated.GetEmployeeByLocalIdOrPassportParams{
 		LocalIDNumber:         ToSqlNullStr(localId),
 		ForeignPassportNumber: ToSqlNullStr(passportNumber),
 	})

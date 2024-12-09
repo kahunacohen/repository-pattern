@@ -14,7 +14,7 @@ type CompanyImpl struct {
 
 func (c *CompanyImpl) GetFirst(ctx context.Context) (*generated.Company, error) {
 	queries := generated.New(c.DB)
-	company, err := queries.GetFirst(ctx)
+	company, err := queries.GetFirstCompany(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error getting first company: %v", err)
 	}
