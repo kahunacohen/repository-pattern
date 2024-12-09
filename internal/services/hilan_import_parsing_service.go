@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kahunacohen/repo-pattern/db/generated"
 	"github.com/ttacon/libphonenumber"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
@@ -44,9 +43,10 @@ type hilanRecord struct {
 	Tarrif          string     `json:"tarrif"`
 }
 
-type HilanImportParsingService struct {
-	familyStatuses map[int]*generated.FamilyStatus
-}
+//	type HilanImportParsingService struct {
+//		familyStatuses map[int]*generated.FamilyStatus
+//	}
+type HilanImportParsingService struct{}
 
 func (h *HilanImportParsingService) ParseStream(r io.Reader) ([]hilanRecord, error) {
 	var records []hilanRecord

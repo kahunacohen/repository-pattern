@@ -4,8 +4,6 @@ import (
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/kahunacohen/repo-pattern/db/generated"
 )
 
 func TestHilanParsingServiceLineTooShort(t *testing.T) {
@@ -23,12 +21,13 @@ func TestHilanParsingService(t *testing.T) {
 	}
 	defer fh.Close()
 
-	hilanImportService := HilanImportParsingService{familyStatuses: map[int]*generated.FamilyStatus{
-		0: {ID: 1, Name: "single"},
-		1: {ID: 2, Name: "married"},
-		2: {ID: 3, Name: "devorce"},
-		3: {ID: 4, Name: "widow"},
-	}}
+	// hilanImportService := HilanImportParsingService{familyStatuses: map[int]*generated.FamilyStatus{
+	// 	0: {ID: 1, Name: "single"},
+	// 	1: {ID: 2, Name: "married"},
+	// 	2: {ID: 3, Name: "devorce"},
+	// 	3: {ID: 4, Name: "widow"},
+	// }}
+	hilanImportService := HilanImportParsingService{}
 	records, err := hilanImportService.ParseStream(fh)
 	if err != nil {
 		t.Fatalf("failed to parse file: %v", err)
