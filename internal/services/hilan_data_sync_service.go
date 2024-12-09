@@ -9,7 +9,6 @@ import (
 )
 
 type HilanDataSyncService struct {
-	companyRepo      repositories.CompanyRepo
 	ctx              context.Context
 	employeeRepo     repositories.EmployeeRepo
 	familyStatusRepo repositories.FamilyStatusRepo
@@ -18,15 +17,28 @@ type HilanDataSyncService struct {
 
 func NewHilanDataSyncService(ctx context.Context, companyRepo repositories.CompanyRepo, employeeRepo repositories.EmployeeRepo, familyStatusRepo repositories.FamilyStatusRepo) (*HilanDataSyncService, error) {
 	company, err := companyRepo.GetFirst(ctx)
+	if !company.EmployeeSyncActive {
+		return nil, fmt.Errorf("error intializing HilanDataSyncService: company %s employee_sync_active is not set", company.Name)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("error initializing HilanDataSyncService: %w", err)
 	}
-	fmt.Println(company)
+	familyStatuses, err := familyStatusRepo.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing HilanDataSyncService: %w", err)
+	}
+
+	familyStatusesMap := make(map[int]*generated.FamilyStatus, len(familyStatuses))
+	for _, fs := range familyStatuses {
+		fstatus := fs
+		familyStatusesMap[int(fs.AccountingID)] = &fstatus
+	}
 
 	return &HilanDataSyncService{
 		ctx:              ctx,
 		employeeRepo:     employeeRepo,
 		familyStatusRepo: familyStatusRepo,
+		familyStatuses:   familyStatusesMap,
 	}, nil
 }
 func (ds *HilanDataSyncService) SyncRecords(records []hilanRecord) error {
