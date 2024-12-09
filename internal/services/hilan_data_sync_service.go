@@ -3,15 +3,19 @@ package services
 import (
 	"fmt"
 
+	"github.com/kahunacohen/repo-pattern/db/generated"
 	"github.com/kahunacohen/repo-pattern/internal/repositories"
 )
 
 type HilanDataSyncService struct {
+	companyRepo      repositories.CompanyRepo
 	employeeRepo     repositories.EmployeeRepo
 	familyStatusRepo repositories.FamilyStatusRepo
+	familyStatuses   map[int]*generated.FamilyStatus
 }
 
 func NewHilanDataSyncService(employeeRepo repositories.EmployeeRepo, familyStatusRepo repositories.FamilyStatusRepo) *HilanDataSyncService {
+
 	return &HilanDataSyncService{
 		employeeRepo:     employeeRepo,
 		familyStatusRepo: familyStatusRepo,

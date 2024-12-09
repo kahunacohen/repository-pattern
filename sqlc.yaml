@@ -2,6 +2,7 @@ version: "2"
 sql:
   - engine: "sqlite"
     queries:   
+      - db/queries/companies.sql
       - db/queries/family_statuses.sql
       - db/queries/employees.sql
       - db/queries/patients.sql
