@@ -6,6 +6,6 @@ import (
 	"github.com/kahunacohen/repo-pattern/db/generated"
 )
 
-type FamilyStatusRepository interface {
+type FamilyStatusRepo interface {
 	GetAll(ctx context.Context) ([]generated.FamilyStatus, error)
 }

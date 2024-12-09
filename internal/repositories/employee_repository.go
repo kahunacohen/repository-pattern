@@ -6,6 +6,6 @@ import (
 	"github.com/kahunacohen/repo-pattern/db/generated"
 )
 
-type EmployeeRepository interface {
+type EmployeeRepo interface {
 	GetEmployeeByLocalIdOrPassport(ctx context.Context, localId, passportNumber *string) (*generated.Employee, error)
 }
