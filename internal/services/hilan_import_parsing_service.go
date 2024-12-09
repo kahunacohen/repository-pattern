@@ -32,7 +32,7 @@ type hilanRecord struct {
 	Birthday        *time.Time `json:"birthday"`
 	City            *string    `json:"city"`
 	Email           *string    `json:"email"`
-	FamilyStatus    *int64     `json:"familyStatusId"`
+	FamilyStatus    *int64     `json:"familyStatus"`
 	FirstName       string     `json:"firstName"`
 	LocalID         string     `json:"localID"`
 	Mobile          *string    `json:"mobile"`
