@@ -59,8 +59,8 @@ func TestHilanParsingService(t *testing.T) {
 	if *firstRecord.City != "ניר עקיבא" {
 		t.Fatalf("wanted 'ניר עקיבא', got %s", *firstRecord.City)
 	}
-	if *firstRecord.FamilyStatusId != 2 {
-		t.Fatalf("wanted 2 for family status ID, got %d", *firstRecord.FamilyStatusId)
+	if *firstRecord.FamilyStatus != 6 {
+		t.Fatalf("wanted 6 for family status ID, got %d", *firstRecord.FamilyStatus)
 	}
 	formattedBirthday := firstRecord.Birthday.Format("2006-01-02 15:04:05 +200 IST")
 

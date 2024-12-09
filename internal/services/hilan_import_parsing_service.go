@@ -32,7 +32,7 @@ type hilanRecord struct {
 	Birthday        *time.Time `json:"birthday"`
 	City            *string    `json:"city"`
 	Email           *string    `json:"email"`
-	FamilyStatusId  *int64     `json:"familyStatusId"`
+	FamilyStatus    *int64     `json:"familyStatusId"`
 	FirstName       string     `json:"firstName"`
 	LocalID         string     `json:"localID"`
 	Mobile          *string    `json:"mobile"`
@@ -115,7 +115,7 @@ func (h *HilanImportParsingService) parseLine(lineNum int, line []byte) (*hilanR
 		// @TODO what about this error?
 		log.Printf("error parsing line %d. Cannot read family status \"%v\" from file\n", lineNum, string(familyBuf))
 	}
-	h.setFamilyStatusID(&record, familyStatusFromFile)
+	record.FamilyStatus = familyStatusFromFile
 
 	birthday, err := readDate(buf.Next(8), "20060102")
 	if err != nil {
@@ -217,32 +217,33 @@ func (h *HilanImportParsingService) parseLine(lineNum int, line []byte) (*hilanR
 
 // This function takes a family status number from the hilan file, converts it to
 // Matav's family status db and sets the record with that ID.
-func (h *HilanImportParsingService) setFamilyStatusID(record *hilanRecord, familyStatusFromFile *int64) {
-	if familyStatusFromFile != nil {
-		familyStatusValueFromFile := *familyStatusFromFile
-		if familyStatusValueFromFile > 5 {
-			// @TODO why minus 5 from values over 5?
-			familyStatusValueFromFile = familyStatusValueFromFile - 5
-		}
-		// the family statuses map is a map of accounting IDs to FamilyStatus structs, each
-		// with the Database ID and the name (e.g. single, married etc). I assume the status in the file
-		// is the accounting ID?
-		// DB looks like this:
-		// id |  name   | accounting_id
-		// ----+---------+---------------
-		//   1 | single  |             0
-		//   2 | married |             0
-		//   3 | devorce |             0
-		//   4 | widow   |             0
-		// @TODO the odd thing is that in our real db, every family status has an accounting_id of 0.
-		// For our test we inject a map, but we can't statically assign a map with identical keys of 0.
-		// This means that in the real job, it will always be single...?!!
-		familyStatus, ok := h.familyStatuses[int(familyStatusValueFromFile)]
-		if ok {
-			record.FamilyStatusId = &familyStatus.ID
-		}
-	}
-}
+//
+//	func (h *HilanImportParsingService) setFamilyStatusID(record *hilanRecord, familyStatusFromFile *int64) {
+//		if familyStatusFromFile != nil {
+//			familyStatusValueFromFile := *familyStatusFromFile
+//			if familyStatusValueFromFile > 5 {
+//				// @TODO why minus 5 from values over 5?
+//				familyStatusValueFromFile = familyStatusValueFromFile - 5
+//			}
+//			// the family statuses map is a map of accounting IDs to FamilyStatus structs, each
+//			// with the Database ID and the name (e.g. single, married etc). I assume the status in the file
+//			// is the accounting ID?
+//			// DB looks like this:
+//			// id |  name   | accounting_id
+//			// ----+---------+---------------
+//			//   1 | single  |             0
+//			//   2 | married |             0
+//			//   3 | devorce |             0
+//			//   4 | widow   |             0
+//			// @TODO the odd thing is that in our real db, every family status has an accounting_id of 0.
+//			// For our test we inject a map, but we can't statically assign a map with identical keys of 0.
+//			// This means that in the real job, it will always be single...?!!
+//			familyStatus, ok := h.familyStatuses[int(familyStatusValueFromFile)]
+//			if ok {
+//				record.FamilyStatusId = &familyStatus.ID
+//			}
+//		}
+//	}
 func setEmail(buf *bytes.Buffer, record *hilanRecord) {
 	email := strings.Trim(string(buf.Next(31)), " ")
 	if len(email) == 0 {
