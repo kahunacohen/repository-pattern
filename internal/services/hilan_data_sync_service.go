@@ -18,7 +18,7 @@ type HilanDataSyncService struct {
 func NewHilanDataSyncService(ctx context.Context, companyRepo repositories.CompanyRepo, employeeRepo repositories.EmployeeRepo, familyStatusRepo repositories.FamilyStatusRepo) (*HilanDataSyncService, error) {
 	company, err := companyRepo.GetFirst(ctx)
 	if !company.EmployeeSyncActive {
-		return nil, fmt.Errorf("error intializing HilanDataSyncService: company %s employee_sync_active is not set", company.Name)
+		return nil, fmt.Errorf("error intializing HilanDataSyncService: company \"%s\" employee_sync_active flag not set", company.Name)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("error initializing HilanDataSyncService: %w", err)

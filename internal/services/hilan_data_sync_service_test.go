@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -24,7 +23,9 @@ func TestHilanDataSyncServiceSyncFlagNotSet(t *testing.T) {
 		&repositories.CompanyImpl{DB: db},
 		&repositories.EmployeeRepositoryImpl{DB: db},
 		&repositories.FamilyStatusImpl{DB: db})
-	fmt.Println(err) foo
+	if err.Error() != "error intializing HilanDataSyncService: company \"matav\" employee_sync_active flag not set" {
+		t.Fatalf("did not get employee_sync_active not set error")
+	}
 }
 func TestHilanDataSyncServiceSyncRecords(t *testing.T) {
 	db, _ := sql.Open("sqlite3", ":memory:")
