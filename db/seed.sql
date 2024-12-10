@@ -1,6 +1,6 @@
 -- Insert companies
-INSERT INTO companies (employee_sync_ftp_address, employee_sync_ftp_input_dir, employee_sync_ftp_output_dir, employee_sync_ftp_password, employee_sync_ftp_user, name) VALUES
-('62.214.45.141', 'in-hilan-employees', 'out-hilan-employees', 'admin', 'user', 'matav');
+INSERT INTO companies (employee_sync_ftp_address, employee_sync_ftp_input_dir, employee_sync_ftp_output_dir, employee_sync_ftp_password, employee_sync_ftp_user, name, employee_sync_active) VALUES
+('62.214.45.141', 'in-hilan-employees', 'out-hilan-employees', 'admin', 'user', 'matav', true);
 
 -- Insert Emergency Contacts
 INSERT INTO emergency_contacts (emergency_details_id, last_name, first_name, relationship, phone_number, email) VALUES

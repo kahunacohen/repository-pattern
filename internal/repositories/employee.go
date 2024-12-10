@@ -8,4 +8,5 @@ import (
 
 type EmployeeRepo interface {
 	GetEmployeeByLocalIdOrPassport(ctx context.Context, localId, passportNumber *string) (*generated.Employee, error)
+	UpdateEmployee(ctx context.Context, params generated.UpdateEmployeeParams) error
 }

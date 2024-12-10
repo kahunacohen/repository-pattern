@@ -36,6 +36,7 @@ func TestHilanDataSyncServiceSyncRecords(t *testing.T) {
 	if err := loadSchemaAndSeed(db); err != nil {
 		t.Fatalf("failed to load and seed db: %v", err)
 	}
+	// db.Exec("UPDATE companies SET employee_sync_active=true WHERE name='matav';")
 
 	data, err := os.ReadFile("./MBTD594.json")
 	if err != nil {
@@ -49,11 +50,14 @@ func TestHilanDataSyncServiceSyncRecords(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
-	hilanDataSyncService, _ := NewHilanDataSyncService(
+	hilanDataSyncService, err := NewHilanDataSyncService(
 		context.Background(),
 		&repositories.CompanyImpl{DB: db},
 		&repositories.EmployeeRepositoryImpl{DB: db},
 		&repositories.FamilyStatusImpl{DB: db})
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	hilanDataSyncService.SyncRecords(records)
 }
