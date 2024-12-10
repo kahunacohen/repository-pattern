@@ -58,6 +58,12 @@ func TestHilanParsingService(t *testing.T) {
 	if *firstRecord.City != "ניר עקיבא" {
 		t.Fatalf("wanted 'ניר עקיבא', got %s", *firstRecord.City)
 	}
+
+	// The 6th record has a passport
+	if *records[6].Passport != "A2974438" {
+		t.Fatalf("wanted 'A2974438', got '%s'", *records[6].Passport)
+	}
+
 	if *firstRecord.FamilyStatus != 6 {
 		t.Fatalf("wanted 6 for family status ID, got %d", *firstRecord.FamilyStatus)
 	}

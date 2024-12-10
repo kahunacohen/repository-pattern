@@ -42,6 +42,9 @@ func NewHilanDataSyncService(ctx context.Context, companyRepo repositories.Compa
 	}, nil
 }
 func (ds *HilanDataSyncService) SyncRecords(records []hilanRecord) error {
-	fmt.Println(len(records))
+	// for _, record := range records {
+	// 	// ds.employeeRepo.GetEmployeeByLocalIdOrPassport(ds.ctx, &record.LocalID, "")
+	// 	// fmt.Println(record)
+	// }
 	return nil
 }

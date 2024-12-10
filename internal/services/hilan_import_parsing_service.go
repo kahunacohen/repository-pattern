@@ -35,6 +35,7 @@ type hilanRecord struct {
 	FirstName       string     `json:"firstName"`
 	LocalID         string     `json:"localID"`
 	Mobile          *string    `json:"mobile"`
+	Passport        *string    `json:"passport"`
 	PhoneNumber2    *string    `json:"phoneNumber2"`
 	SpouceFirstName *string    `json:"spouceFirstName"`
 	Status          *string    `json:"status"`
@@ -184,7 +185,9 @@ func (h *HilanImportParsingService) parseLine(lineNum int, line []byte) (*hilanR
 	_ = *readString(buf.Next(2))
 
 	// passport
-	buf.Next(15)
+	passport := *readString(buf.Next(15))
+	record.Passport = &passport
+
 	// several fields
 	buf.Next(78)
 	tariffBuf := buf.Next(10)

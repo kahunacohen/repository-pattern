@@ -17,6 +17,8 @@ func TestHilanDataSyncServiceSyncFlagNotSet(t *testing.T) {
 	if err := loadSchemaAndSeed(db); err != nil {
 		t.Fatalf("failed to load and seed db: %v", err)
 	}
+
+	// Unset flag in db.
 	db.Exec("UPDATE companies SET employee_sync_active=false WHERE name='matav';")
 	_, err := NewHilanDataSyncService(
 		context.Background(),
@@ -29,6 +31,8 @@ func TestHilanDataSyncServiceSyncFlagNotSet(t *testing.T) {
 }
 func TestHilanDataSyncServiceSyncRecords(t *testing.T) {
 	db, _ := sql.Open("sqlite3", ":memory:")
+	defer db.Close()
+
 	if err := loadSchemaAndSeed(db); err != nil {
 		t.Fatalf("failed to load and seed db: %v", err)
 	}
@@ -37,14 +41,14 @@ func TestHilanDataSyncServiceSyncRecords(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error reading file: %v", err)
 	}
+
+	// Unmarshal a json file (representing hilan records parsed from a file)
+	// so we can pass to SyncRecords.
 	var records []hilanRecord
 	err = json.Unmarshal(data, &records)
 	if err != nil {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
-
-	defer db.Close()
-
 	hilanDataSyncService, _ := NewHilanDataSyncService(
 		context.Background(),
 		&repositories.CompanyImpl{DB: db},
